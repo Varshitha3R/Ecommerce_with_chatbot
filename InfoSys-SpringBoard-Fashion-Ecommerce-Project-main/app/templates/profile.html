@@ -1,0 +1,191 @@
+{% extends 'base.html' %}
+
+{% block heads %}
+<title>My Profile</title>
+<style>
+
+
+        .profile-container {
+            background: #ffffff;
+            display: flex;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .profile-sidebar {
+            background-color: #354f69;
+            color: white;
+            padding: 20px;
+            width: 35%;
+            text-align: center;
+        }
+
+        .profile-sidebar img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        .profile-sidebar h2 {
+            margin-bottom: 5px;
+        }
+
+        .profile-sidebar p {
+            font-size: 14px;
+        }
+
+        .profile-content {
+            width: 65%;
+            padding: 30px;
+        }
+
+        .profile-content h3 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .profile-content .info-group {
+            margin-bottom: 15px;
+        }
+
+        .profile-content .info-group label {
+            display: block;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .profile-content .info-group input {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        .profile-content .actions {
+            margin-top: 20px;
+        }
+
+        .profile-content .actions button {
+            background-color: #54b9ff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .profile-content .actions button:hover {
+            background-color: #459fdb;
+        }
+
+        .profile-actions {
+            margin-top: 30px;
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+        }
+
+        .profile-actions .card {
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .profile-actions .card-header {
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .profile-actions .card-body a {
+            display: block;
+            text-decoration: none;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .profile-actions .card-body a:hover {
+            background-color: #f0f4f8;
+        }
+
+        .profile-actions .card-body a.btn-danger {
+            color: white;
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        .profile-actions .card-body a.btn-danger:hover {
+            background-color: #c82333;
+        }
+    </style>
+{% endblock heads %}
+
+{% block content %}
+    
+<div class="profile-container">
+    <!-- Sidebar Section -->
+    <div class="profile-sidebar">
+        <img src="{{ url_for('static', filename='img/user.png') }}" alt="Profile Picture">
+        <h2>{{ current_user.firstname }} {{ current_user.lastname }}</h2>
+        <p>{{ current_user.role }}</p>
+    </div>
+        
+    <!-- Content Section -->
+    <div class="profile-content">
+            <h3>Profile Information</h3>
+            <div class="info-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" value="{{ current_user.firstname }} {{ current_user.lastname }}" disabled>
+            </div>
+            <div class="info-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" value="{{ current_user.email }}" disabled>
+            </div>
+            <div class="info-group">
+                <label for="role">Role</label>
+                <input type="text" id="role" value="{{ current_user.role }}" disabled>
+            </div>
+
+            {% if current_user.role == 'delivery' %}
+                <div class="info-group">
+                    <label for="status">status</label>
+                    <input type="text" id="status" value="{% if current_user.approved %}
+                        Approved
+                    {% else %}
+                        Not Approved
+                    {% endif %}" disabled>
+                </div>
+            {% endif %}
+
+            <div class="info-group">
+                <label for="address">Address</label>
+                <input type="text" id="address" value="{{ current_user.address_line_1 }}, {{ current_user.city }}, {{ current_user.state }}, ({{ current_user.pincode }})" disabled>
+            </div>
+            
+            <!-- Profile Actions Section -->
+            <div class="profile-actions">
+                <div class="card">
+                    <div class="card-header">Profile Actions</div>
+                    <div class="card-body">
+                        <a href="/update" class="btn btn-outline-secondary">Update Profile</a>
+                        <a href="/change-password" class="btn btn-outline-secondary">Update Password</a>
+                        <a href="/my_orders" class="btn btn-outline-secondary">View Orders</a>
+                        <a href="/logout" class="btn btn-danger">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

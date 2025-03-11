@@ -1,0 +1,279 @@
+{% extends 'base.html' %}
+{% block heads %}
+  
+<title>Delivery Dashboard</title>
+<style>
+  body {
+    background-color: #f4f4f4;
+    font-family: Arial, sans-serif;
+    color: #333;
+  }
+  
+  h1 {
+    color: #4CAF50;
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 30px;
+  }
+  
+  h4 {
+    color: #5a5a5a;
+    font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .table {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .table th, .table td {
+      text-align: center;
+      padding: 12px;
+    }
+    
+    .table th {
+      background-color: #4CAF50;
+      color: white;
+      font-size: 16px;
+    }
+    
+    .table td {
+      font-size: 14px;
+    }
+
+    .btn {
+      border-radius: 5px;
+    }
+    
+    .btn-primary {
+      background-color: #007bff;
+      border: none;
+    }
+    
+    .btn-primary:hover {
+      background-color: #0056b3;
+    }
+    
+    .btn-success {
+      background-color: #28a745;
+      border: none;
+    }
+    
+    .btn-success:hover {
+      background-color: #218838;
+    }
+    
+    .form-control {
+      font-size: 14px;
+    }
+    
+    .status-text {
+      font-weight: bold;
+    }
+    
+    .section {
+      margin-bottom: 30px;
+    }
+    
+    .no-data {
+      font-style: italic;
+      color: #999;
+    }
+    
+    /* New Orders Section */
+    .new-orders {
+      background-color: #eaf8e0;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    
+    /* Assigned Orders Section */
+    .assigned-orders {
+      background-color: #e0f7fa;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    
+    /* Delivered Orders Section */
+    .delivered-orders {
+      background-color: #e8f5e9;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    /* Cancelled Orders Section */
+
+    .cancelled-orders{
+      background-color: #f3c5c5;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    
+  </style>
+{% endblock heads %}
+
+{% block content %}
+  
+<div class="container mt-4">
+  <h1 class="text-center mb-4">Delivery Dashboard</h1>
+  
+  <div class="row">
+    <!-- New Orders Section -->
+    <div class="col-md-6 new-orders section">
+      <h4>New Orders </h4>
+      {% if new_orders %}
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Customer Name</th>
+            <th>Address</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+            </thead>
+            <tbody>
+              {% for order in new_orders %}
+              <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ order.customer_name }}</td>
+                <td>{{ order.address_line_1+", "+order.city+", "+order.state }}</td>
+                <td>{{ order.mail }}</td>
+                <td>{{ order.status }}</td>
+                
+                <td>
+                  <!-- Button to assign the order to the delivery partner -->
+                  <form action="{{ url_for('views.update_status', order_id=order.id) }}" method="POST">
+                    <input type="hidden" name="status" value="Pending">
+                    <button type="submit" class="btn btn-primary btn-sm">Assign to Me</button>
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <p class="no-data">No new orders available for delivery.</p>
+          {% endif %}
+        </div>
+        
+        <!-- Assigned Orders Section -->
+        <div class="col-md-6 assigned-orders section">
+          <h4>Assigned Orders</h4>
+          {% if assigned_orders %}
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Customer Name</th>
+                <th>Address</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for order in assigned_orders %}
+              <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ order.customer_name }}</td>
+                <td>{{ order.address_line_1+", "+order.city+", "+order.state }}</td>
+                <td>{{ order.mail }}</td>
+                <td>{{ order.status }}</td>
+                <td>
+                  {% if order.status != 'Delivered' %}
+                  <!-- Form to update the order status if it's not delivered successfully -->
+                  <form action="{{ url_for('views.update_status', order_id=order.id) }}" method="POST">
+                    <select name="status" class="form-control">
+                      <option value="Pending" {% if order.status == "Pending" %}selected{% endif %}>In Transit</option>
+                      <option value="Delivered" {% if order.status == "Delivered" %}selected{% endif %}>Delivered Successfully</option>
+                      <option value="Cancelled" {% if order.status == "Cancelled" %}selected{% endif %}>Failed</option>
+                    </select>
+                    <button type="submit" class="btn btn-success btn-sm mt-2">Update Status</button>
+                  </form>
+                    {% else %}
+                    <!-- If the order is delivered successfully, no action form is displayed -->
+                    <p class="status-text">Delivered Successfully</p>
+                    {% endif %}
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            {% else %}
+            <p class="no-data">No orders assigned to you yet.</p>
+            {% endif %}
+          </div>
+          
+      <!-- Delivered Orders Section -->
+      <div class="col-md-6 delivered-orders section">
+        <h4>Delivered Orders</h4>
+        {% if delivered_orders %}
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer Name</th>
+              <th>Address</th>
+              <th>Email</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for order in delivered_orders %}
+            <tr>
+              <td>{{ order.id }}</td>
+              <td>{{ order.customer_name }}</td>
+              <td>{{ order.address_line_1+", "+order.city+", "+order.state }}</td>
+              <td>{{ order.mail }}</td>
+              <td>{{ order.status }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+          <p class="no-data">No delivered orders yet.</p>
+        {% endif %}
+      </div>
+      
+      <!-- cancelled order section -->
+      <div class="col-md-6 cancelled-orders section">
+      <h4>Cancelled Orders</h4>
+      {% if cancelled_orders %}
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Customer Name</th>
+            <th>Address</th>
+            <th>Email</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for order in cancelled_orders %}
+          <tr>
+            <td>{{ order.id }}</td>
+            <td>{{ order.customer_name }}</td>
+            <td>{{ order.address_line_1+", "+order.city+", "+order.state }}</td>
+            <td>{{ order.mail }}</td>
+            <td>{{ order.status }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p class="no-data">No Cancelled orders yet.</p>
+      {% endif %}
+    </div>
+  </div>
+  </div>
+  </div>
+{% endblock content %}

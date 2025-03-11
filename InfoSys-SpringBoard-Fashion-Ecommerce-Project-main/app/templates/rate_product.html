@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% block title %}
+Rate Product - {{ product.name }}
+{% endblock %}
+{% block heads %}
+    <style>
+        
+
+        .container-rate {
+            max-width: 600px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .rating {
+            margin-bottom: 20px;
+        }
+
+        .stars {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .star {
+            font-size: 2rem;
+            cursor: pointer;
+            color: #ddd;
+            transition: color 0.3s;
+        }
+
+        .star:hover,
+        .star.selected {
+            color: #ffc107;
+        }
+
+        textarea {
+            height: 100px;
+            width: 90%;
+            max-width: 100%;
+            max-height: 100%;
+            margin-top: 20px;
+            margin-left: 0px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        #rating-form{
+            height: 300px;
+            width: 100%;
+        }
+
+
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="container-rate">
+        <h1>Rate The Product</h1>
+
+        <img src="{{ url_for('static', filename='product_uploads/'+product.image) }}" height="150px" alt="{{ product.name }}">
+        <h2>{{ product.name }}</h2>
+       
+        <form method="POST" id="rating-form">
+            <div class="rating">
+                <div class="stars" id="star-rating">
+                    <!-- Stars for rating -->
+                    <span class="star" data-value="1">&#9733;</span>
+                    <span class="star" data-value="2">&#9733;</span>
+                    <span class="star" data-value="3">&#9733;</span>
+                    <span class="star" data-value="4">&#9733;</span>
+                    <span class="star" data-value="5">&#9733;</span>
+                </div>
+                <input type="hidden" name="rating" id="rating-value" required>
+            </div>
+           <textarea name="description" placeholder="Write your review here..."required></textarea>
+            <button type="submit" class="btn btn-success">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        const stars = document.querySelectorAll('.star');
+        const ratingValue = document.getElementById('rating-value');
+
+        stars.forEach(star => {
+            star.addEventListener('click', () => {
+                // Clear previous selection
+                stars.forEach(s => s.classList.remove('selected'));
+
+                // Highlight the selected stars
+                for (let i = 0; i < star.dataset.value; i++) {
+                    stars[i].classList.add('selected');
+                }
+
+                // Update the hidden input value
+                ratingValue.value = star.dataset.value;
+            });
+        });
+    </script>
+{% endblock %}

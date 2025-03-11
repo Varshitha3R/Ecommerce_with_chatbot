@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}Product Details - {{ product['name'] }}{% endblock %}
+{% block heads %}
+<link rel="stylesheet" href="/static/css/navbar.css">
+{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <!-- Product Details Section -->
+    <section class="py-5">
+      <div class="container">
+        <div class="row">
+          <!-- Product Image -->
+          <div class="col-md-6">
+            <img src="{{ url_for('static', filename='product_uploads/' + product.image) }}" alt="{{ product.name }}" class="product-image">
+          </div>
+          <!-- Product Information -->
+          <div class="col-md-6">
+            <h1 class="mb-3">{{ product.name }}</h1>
+            <h3 class="text-primary mb-3">₹{{ product.price }}</h3>
+            <p class="text-muted mb-4">{{ product.description }}</p>
+            {% if product.rating %}
+              <p class="text-warning mb-2">{{ product.rating }}&#9733; / 5</p>
+            {% else %}
+              <p class="text-primary mb-2">No Ratings Yet</p>
+            {% endif %}
+
+            <form action="{{ url_for('views.add_to_cart', product_id=product.id) }}" method="post" class="d-inline-block">
+              {% if product.stock_quantity > 0 %}
+                  <button type="submit" class="btn btn-success btn-lg">Add to Cart</button>
+              {% else %}
+                  <button type="button" class="btn btn-danger btn-lg" disabled>Out of Stock</button>
+              {% endif %}
+          </form>
+          <form action="{{ url_for('views.add_to_wishlist', product_id=product.id) }}" method="POST" class="d-inline-block ms-3">
+              {% if product.id in wishlist %}
+                  <button type="button" class="btn btn-warning btn-lg" disabled>Already in Wishlist</button>
+              {% else %}
+                  <button type="submit" class="btn btn-outline-secondary btn-lg">
+                      <i class="bi bi-heart"></i>
+                  </button>
+              {% endif %}
+          </form>
+
+            <!-- Additional Details -->
+            <h4 class="mt-5">Why Choose This Product?</h4>
+            {{ product.details }}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Recommended Products Section -->
+    <section class="py-5">
+      <div class="container">
+        <h2 class="text-center mb-4">You May Also Like</h2>
+        <div class="row g-4">
+          {% for similar_product in similar_products %}
+          <div class="col-sm-6 col-md-4 col-lg-3">
+            <div class="card product-card">
+              <img src="{{ url_for('static', filename='product_uploads/' + similar_product.image) }}" class="card-img-top" alt="{{ similar_product.name }}">
+              <div class="card-body text-center">
+                <h5 class="card-title">{{ similar_product.name }}</h5>
+                <p class="card-text text-primary fw-bold">₹{{ similar_product.price }}</p>
+                <a href="{{ url_for('views.product_details', product_id=similar_product.id) }}" class="btn btn-primary">View Details</a>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <!-- Product Ratings Section -->
+    {% if ratings %}
+    <section>
+      <h1 class="text-center mb-4">Product Ratings</h1>
+      
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <ul class="list-group">
+          {% for rating in ratings %}
+          <li class="list-group-item mb-3 shadow-sm rounded">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h5 class="mb-1">Rated by: {{ rating.user.firstname }} {{ rating.user.lastname }}</h5>
+                <small class="text-muted">{{ rating.date.strftime('%B %d, %Y') }}</small>
+              </div>
+              <div>
+                <!-- Displaying stars -->
+                <span class="text-warning fs-4">
+                  {% for i in range(1, 6) %}
+                  {% if i <= rating.rate %}
+                  &#9733;
+                  {% else %}
+                  <span class="text-secondary">&#9733;</span>
+                  {% endif %}
+                  {% endfor %}
+                </span>
+              </div>
+            </div>
+            <p class="mt-2">{{ rating.description }}</p>
+            <p class="text-muted mb-0"><em>Product: {{ rating.product.name }}</em></p>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </section>
+  {% endif %}
+</div>
+{% endblock %}

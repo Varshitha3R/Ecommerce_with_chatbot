@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+{% block title %}
+    {{ context.graph_name }}
+{% endblock title %}
+{% block heads %}
+<style>
+    /* Global Styling */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+        background-color: #fff;
+    }
+
+    /* Main Container */
+    .container-body {
+        width: 100%;
+        padding: 20px;
+    }
+
+    /* Page Title */
+    .page-title {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #333;
+        text-align: center;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-bottom: 2px solid #007bff;
+        padding-bottom: 10px;
+        display: inline-block;
+    }
+
+    /* Graph Section */
+    .graph-container {
+        margin: 20px auto;
+        text-align: center;
+        padding: 10px;
+    }
+
+    .graph-container h2 {
+        font-size: 1.8rem;
+        color: #007bff;
+        margin-bottom: 15px;
+    }
+
+    .graph-image {
+        max-width: 90%;
+        height: auto;
+        border: 3px solid #ddd;
+        border-radius: 12px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .graph-image:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Data Table Section */
+    .table-container {
+        width: 100%;
+        margin: 20px auto;
+        overflow-x: auto;
+        padding: 10px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .table-container h2 {
+        font-size: 1.8rem;
+        color: #28a745;
+        margin-bottom: 15px;
+        text-align: left;
+        border-bottom: 2px solid #28a745;
+        display: inline-block;
+        padding-bottom: 8px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    table th, table td {
+        padding: 12px;
+        text-align: center;
+        border: 1px solid #ddd;
+        transition: background-color 0.3s ease;
+    }
+
+    table th {
+        background-color: #007bff;
+        color: #fff;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    table td {
+        background-color: #f9f9f9;
+    }
+
+    table tr:hover td {
+        background-color: #f1f8ff;
+    }
+
+    /* Back Button */
+    .btn-primary {
+        display: inline-block;
+        margin: 20px auto;
+        padding: 12px 30px;
+        background: linear-gradient(135deg, #007bff, #0056b3);
+        color: #fff;
+        font-weight: bold;
+        text-decoration: none;
+        border-radius: 5px;
+        text-align: center;
+        transition: transform 0.2s ease, background 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #0056b3, #003f7f);
+        transform: scale(1.05);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .page-title {
+            font-size: 1.8rem;
+        }
+
+        .graph-container h2,
+        .table-container h2 {
+            font-size: 1.5rem;
+        }
+
+        table th, table td {
+            padding: 8px;
+        }
+    }
+</style>
+{% endblock heads %}
+{% block content %}
+<div class="container-body">
+    <!-- Page Title -->
+    <h1 class="page-title">{{ context.graph_name }}</h1>
+
+    <!-- Graph Section -->
+    <div class="graph-container">
+        <h2>Graph Visualization</h2>
+        <img src="data:image/png;base64,{{ img }}" alt="Graph" class="graph-image">
+    </div>
+
+    <!-- Data Table Section -->
+    <div class="table-container">
+        <h2>Data Table</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    {% for attribute in context.Attributes %}
+                        <th>{{ attribute }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in context.data %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    {% for item in row %}
+                        <td>{{ item }}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Back Button -->
+    <a class="btn-primary" href="/admin/stats">Back</a>
+</div>
+{% endblock content %}

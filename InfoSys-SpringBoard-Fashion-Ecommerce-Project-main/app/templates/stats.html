@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+{% block title %}
+    Enhanced Analytics Dashboard
+{% endblock title %}
+{% block heads %}
+<style>
+    /* General Styles */
+    body {
+        background: linear-gradient(135deg, #f9f9f9, #e9ecef);
+        font-family: 'Poppins', sans-serif;
+    }
+
+    /* Header */
+    h2 {
+        color: #2c3e50;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 2rem;
+    }
+
+    /* Card Styles */
+    .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease-in-out;
+    }
+
+    .card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-title {
+        font-weight: bold;
+        color: #2c3e50;
+    }
+
+    .card-text {
+        color: #6c757d;
+        font-size: 0.95rem;
+    }
+
+    /* Button Styles */
+    .btn-success {
+        background: linear-gradient(135deg, #28a745, #218838);
+        color: #fff;
+        font-weight: bold;
+        border: none;
+        padding: 0.5rem 1.5rem;
+        transition: all 0.3s ease;
+        border-radius: 25px;
+    }
+
+    .btn-success:hover {
+        background: linear-gradient(135deg, #218838, #28a745);
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+    }
+
+    /* Container Styles */
+    .container-fluid {
+        padding: 0.25rem;
+    }
+
+    /* Responsive Grid */
+    .row {
+        justify-content: center;
+    }
+
+    .col-md-6, .col-md-12 {
+        display: flex;
+        justify-content: center;
+    }
+
+    .col-md-6 .card, .col-md-12 .card {
+        width: 100%;
+        max-width: 500px;
+        margin: 1.5rem;
+    }
+</style>
+{% endblock heads %}
+{% block content %}
+<div class="container-fluid">
+    <h2 class="text-center">Analytics Dashboard</h2>
+
+    <!-- Page Content -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">New & Returning Customers</h5>
+                    <p class="card-text">A quick overview of your analytics data about the trends of new and returning customers.</p>
+                    <a href="chart1" class="btn btn-success">View Chart 1</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Revenue Over Time</h5>
+                    <p class="card-text">Visualize the revenue trends across different time periods using a line chart.</p>
+                    <a href="chart2" class="btn btn-success">View Chart 2</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Order Status</h5>
+                    <p class="card-text">Distribution of order statuses.</p>
+                    <a href="chart3" class="btn btn-success">View Chart 3</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Inventory Stock Levels</h5>
+                    <p class="card-text">Inventory stock insights using a bar chart.</p>
+                    <a href="chart4" class="btn btn-success">View Chart 4</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Financial Overview</h5>
+                    <p class="card-text">Compare your performance metrics across revenue, expenses, and profits.</p>
+                    <a href="chart5" class="btn btn-success">View Chart 5</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">User Types Distribution</h5>
+                    <p class="card-text">Types of users across the platform.</p>
+                    <a href="chart6" class="btn btn-success">View Chart 6</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Order Location Relation</h5>
+                    <p class="card-text">Insights for the orders per state across India.</p>
+                    <a href="chart7" class="btn btn-success">View Chart 7</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

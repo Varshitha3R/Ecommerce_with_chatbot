@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Shop Items</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    /* Basic Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #e7f3ff; /* Light blue background */
+      color: #333;
+      padding: 30px 0;
+    }
+
+    /* Wrapper for the form */
+    .wrapper {
+      max-width: 1000px; /* Increased container width */
+      margin: 0 auto;
+      background-color: #ffffff; /* White background for form */
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .container-heading {
+      text-align: center;
+      font-size: 2.5rem; /* Slightly larger heading */
+      color: #1565c0; /* Darker blue */
+      margin-bottom: 30px;
+      font-weight: bold;
+    }
+
+    /* Form Fields */
+    label.form-label {
+      font-weight: bold;
+      color: #1565c0; /* Blue label color */
+    }
+
+    input.form-control, textarea.form-control {
+      border: 1px solid #b3d4fc; /* Light blue border */
+      border-radius: 5px;
+      padding: 10px;
+      width: 100%;
+      font-size: 1rem;
+      transition: border-color 0.3s;
+    }
+
+    input.form-control:focus, textarea.form-control:focus {
+      border-color: #1565c0; /* Blue focus border */
+      outline: none;
+      box-shadow: 0 0 5px rgba(21, 101, 192, 0.4); /* Light blue shadow */
+    }
+
+    /* Buttons */
+    .btn-primary {
+      background-color: #1565c0; /* Blue button */
+      border: none;
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background-color: #0d47a1; /* Darker blue hover */
+    }
+
+    .btn-secondary {
+      background-color: #000; /* Black button */
+      border: none;
+      color: #fff;
+    }
+
+    .btn-secondary:hover {
+      background-color: #333; /* Slightly lighter black hover */
+    }
+
+    /* Image Upload */
+    input[type="file"] {
+      background-color: #f0f8ff; /* Very light blue */
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #b3d4fc; /* Light blue border */
+    }
+
+    input[type="file"]:hover {
+      background-color: #e7f3ff; /* Slightly darker blue hover */
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .wrapper {
+        padding: 20px;
+      }
+
+      .container-heading {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <h2 class="container-heading">Add Shop Items</h2>
+
+    <div class="container form-container">
+      <form id="addItemForm" method="POST" action="{{ url_for('admin.new_product') }}" enctype="multipart/form-data">
+        <!-- Product Name -->
+        <div class="mb-3">
+          <label for="productName" class="form-label">Product Name</label>
+          <input type="text" class="form-control" id="productName" name="name" placeholder="Enter product name" required>
+        </div>
+
+        <!-- Description -->
+        <div class="mb-3">
+          <label for="description" class="form-label">Description</label>
+          <textarea class="form-control" id="description" name="description" rows="3" placeholder="Enter product description" required></textarea>
+        </div>
+
+        <!-- Price -->
+        <div class="mb-3">
+          <label for="price" class="form-label">Price (in decimal)</label>
+          <input type="number" step="0.01" class="form-control" id="price" name="price" placeholder="Enter price" min="1" required>
+        </div>
+
+        <!-- Stock Quantity -->
+        <div class="mb-3">
+          <label for="stockQuantity" class="form-label">Stock Quantity</label>
+          <input type="number" class="form-control" id="stockQuantity" name="stock_quantity" placeholder="Enter stock quantity" min="1" required>
+        </div>
+
+        <!-- Brand -->
+        <div class="mb-3">
+          <label for="brand" class="form-label">Brand</label>
+          <input type="text" class="form-control" id="brand" name="brand" placeholder="Enter brand name" required>
+        </div>
+
+        <!-- Category -->
+        <div class="mb-3">
+          <label for="categoryName" class="form-label">Category Name</label>
+          <input type="text" class="form-control" id="categoryName" name="category" placeholder="Enter category name" required>
+        </div>
+
+        <!-- Size -->
+        <div class="mb-3">
+          <label for="size" class="form-label">Size</label>
+          <input type="text" class="form-control" id="size" name="size" placeholder="Enter size" required>
+        </div>
+
+        <!-- Target User -->
+        <div class="mb-3">
+          <label for="targetUser" class="form-label">Target User</label>
+          <input type="text" class="form-control" id="targetUser" name="target_user" placeholder="Enter target user" required>
+        </div>
+
+        <!-- Type -->
+        <div class="mb-3">
+          <label for="type" class="form-label">Type</label>
+          <input type="text" class="form-control" id="type" name="type" placeholder="Enter type" required>
+        </div>
+
+        <!-- Image -->
+        <div class="mb-3">
+          <label for="image" class="form-label">Upload Image</label>
+          <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="color" class="form-label">Colour</label>
+          <input type="text" class="form-control" id="color" name="color" placeholder="Enter colour" required>
+        </div>
+
+        <!-- Details -->
+        <div class="mb-3">
+          <label for="details" class="form-label">Details</label>
+          <textarea class="form-control" id="details" name="details" rows="4" placeholder="Enter product details"></textarea>
+        </div>
+
+        <!-- Submit and Back Buttons -->
+        <div class="d-flex justify-content-between align-items-center mt-4 px-3">
+          <button type="submit" class="btn btn-primary">Add item</button>
+          <button type="button" class="btn btn-secondary" onclick="goBack()">Back</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function goBack() {
+      window.history.back();
+    }
+  </script>
+</body>
+</html>

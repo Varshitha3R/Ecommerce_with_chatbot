@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% block title %}Approval Dashboard{% endblock title %}
+{% block heads %}
+{% endblock heads %}
+{% block content %}
+<svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+  <symbol id="info-fill" viewBox="0 0 16 16">
+    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+  </symbol>
+  <symbol id="tick-fill" viewBox="0 0 24 24" role="img" aria-label="Cross Circle">
+    <path  d="M12,1A11,11,0,1,0,23,12,11.013,11.013,0,0,0,12,1Zm0,20a9,9,0,1,1,9-9A9.011,9.011,0,0,1,12,21ZM17.737,8.824a1,1,0,0,1-.061,1.413l-6,5.5a1,1,0,0,1-1.383-.03l-3-3a1,1,0,0,1,1.415-1.414l2.323,2.323,5.294-4.853A1,1,0,0,1,17.737,8.824Z"/>
+  </symbol>
+  <symbol id = "cross-fill" viewBox="0 0 24 24" role="img" aria-label="Cross Circle">>
+    <path d="M12,23A11,11,0,1,0,1,12,11.013,11.013,0,0,0,12,23ZM12,3a9,9,0,1,1-9,9A9.01,9.01,0,0,1,12,3ZM8.293,14.293,10.586,12,8.293,9.707A1,1,0,0,1,9.707,8.293L12,10.586l2.293-2.293a1,1,0,0,1,1.414,1.414L13.414,12l2.293,2.293a1,1,0,1,1-1.414,1.414L12,13.414,9.707,15.707a1,1,0,0,1-1.414-1.414Z" />
+  </symbol>
+</svg>
+{% if delivery_persons|length == 0 %}
+    <div class="alert alert-primary d-flex align-items-center" role="alert">
+      <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Info:"><use xlink:href="#info-fill"/></svg>
+      <div>
+        No Delivery Person to approve!
+      </div>
+    </div>
+  {% else %}
+
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">First Name</th>
+        <th scope="col">Last Name</th>
+        <th scope="col">Address</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+    
+    {% for delivery_person in delivery_persons %}
+      <tr>
+        <th scope="row">{{ loop.index }}</th>
+        <td>{{ delivery_person.firstname }}</td>
+        <td>{{ delivery_person.lastname }}</td>
+        <td>{{ delivery_person.address_line_1 }}{{ delivery_person.city }}{{ delivery_person.state }}</td>
+        <td>
+          <button onclick="approve_user({{ delivery_person.id }})" class="btn btn-outline-success"><svg class="bi flex-shrink-0 me-2" fill="#00ff00" role="img" aria-label="approve:"  height="30" width="30"><use xlink:href="#tick-fill"/></svg></button>
+          <button onclick="delete_user({{ delivery_person.id }})" class="btn btn-outline-danger"><svg class="bi flex-shrink-0 me-2" role="img" fill="#ff0000" aria-label="reject:" height="30" width="30">
+            <use xlink:href="#cross-fill"/>
+          </svg></button>
+          <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+          </td>        
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<script>
+
+  function approve_user(id){
+    fetch('approve-user/' + id, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.message === 'User approved successfully') {
+        location.reload();
+      } else {
+        alert(data.message);
+      }
+    })
+    .catch(error => console.error('Error:', error));
+  }
+  
+  function delete_user(id){
+    fetch("delete-user/" + id, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.message === 'User deleted successfully') {
+        location.reload();
+      } else {
+        alert(data.message);
+      }
+    })
+    .catch(error => console.error('Error:', error));
+  }
+  </script>
+{% endif %}
+  {% endblock content %}

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <style>
+        /* Center the entire page */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        /* Chatbox container */
+        #chat-container {
+            width: 750px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        /* Chatbox area */
+        #chatbox {
+            width: 100%;
+            height: 500px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            overflow-y: scroll;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+
+        #chatbox div {
+            margin-bottom: 10px;
+        }
+
+        /* Input field and button styling */
+        #user_input {
+            width: calc(100% - 100px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 10px;
+            border: none;
+            background-color: #51d1ed;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-left: 10px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #4ec3e3;
+        }
+
+        button:focus {
+            outline: none;
+            background-color: #46bfe0;
+        }
+
+        button:active {
+            background-color: #66b3ff;
+        }
+
+        /* Message styling */
+        .message {
+            padding: 5px;
+            margin: 5px 0;
+            border-radius: 4px;
+        }
+
+        .user-message {
+            background-color: #e3f2fd;
+            text-align: right;
+        }
+
+        .bot-message {
+            background-color: #f1f1f1;
+            text-align: left;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="chat-container">
+        <div id="chatbox"></div>
+
+        <div style="display: flex;">
+            <input type="text" id="user_input" placeholder="Ask me something..." />
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        // Function to send message
+        function sendMessage() {
+            var userMessage = document.getElementById("user_input").value;
+            if (userMessage.trim() !== "") {
+                // Display the user's message
+                displayMessage(userMessage, 'user');
+                document.getElementById("user_input").value = ''; // Clear input field
+
+                // Send the message to backend using Fetch API
+                fetch("/chatbot", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ message: userMessage }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.reply) {
+                        displayMessage(data.reply, 'bot');
+                    } else {
+                        displayMessage("Sorry, I couldn't process your request.", 'bot');
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    displayMessage("There was an error with the request.", 'bot');
+                });
+            }
+        }
+
+        // Function to display message in the chatbox
+        function displayMessage(message, sender) {
+            var chatbox = document.getElementById("chatbox");
+            var messageDiv = document.createElement("div");
+            messageDiv.classList.add('message');
+
+            // Detect URLs and turn them into clickable links
+            var urlPattern = /(https?:\/\/[^\s]+)/g;
+            var messageWithLinks = message.replace(urlPattern, function(url) {
+                return `<a href="${url}" target="_blank">${url}</a>`;
+            });
+
+            if (sender === 'user') {
+                messageDiv.classList.add('user-message');
+                messageDiv.innerHTML = "You: " + message;
+            } else if (sender === 'bot') {
+                messageDiv.classList.add('bot-message');
+                messageDiv.innerHTML = "Bot: " + messageWithLinks;
+            }
+
+            chatbox.appendChild(messageDiv);
+            chatbox.scrollTop = chatbox.scrollHeight; // Scroll to bottom of chatbox
+        }
+
+        // On page load, if there is a reply to display, add it.
+        window.onload = function() {
+            const botReply = "{{ bot_message }}";
+            if (botReply) {
+                displayMessage(botReply, 'bot');
+            }
+        }
+
+        // Allow 'Enter' key to send message
+        document.getElementById("user_input").addEventListener("keydown", function(event) {
+            if (event.key === "Enter") {
+                sendMessage();
+            }
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block heads %}
+  <title>Admin Dashboard</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+{% endblock heads %}
+{% block content %}
+  <div class="container mt-5">
+    <div class="row admin-container p-4 shadow rounded bg-white">
+
+      <!-- Sidebar Buttons -->
+      <div class="col-md-3 admin-sidebar d-flex flex-column align-items-center">
+        <h5 class="text-center mb-4">Admin Menu</h5>
+        <button class="btn btn-primary w-100 mb-3" onclick="redirectTo('{{ url_for('admin.new_product') }}')">Add Product</button>
+        <button class="btn btn-primary w-100 mb-3" onclick="redirectTo('{{ url_for('admin.product_list') }}')">View Products</button>
+        <button class="btn btn-primary w-100 mb-3" onclick="redirectTo('{{ url_for('admin.view_orders') }}')">View Orders</button>
+        <button class="btn btn-primary w-100 mb-3" onclick="redirectTo('{{ url_for('admin.approve_delivery_dashboard') }}')">Approve Delivery Persons</button>
+        <button class="btn btn-primary w-100 mb-3" onclick="redirectTo('{{ url_for('admin.stats') }}')">View Analytics</button>
+      </div>
+
+      <!-- Admin Content and Image -->
+      <div class="col-md-9 d-flex justify-content-between align-items-center">
+        <div>
+          <h2 class="mb-3">Welcome to Admin Dashboard</h2>
+          <p class="text-muted">Manage your store efficiently using the tools provided.</p>
+        </div>
+        <img src="{{ url_for('static', filename='img/user.png') }}" alt="Admin Image" class="img-fluid rounded-circle">
+
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // Function to handle redirection
+    function redirectTo(page) {
+      window.location.href = page;
+    }
+  </script>
+{% endblock content %}

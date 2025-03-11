@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}Your Orders{% endblock %}
+
+{% block content %}
+{% block heads %}
+<link rel="stylesheet" href="/static/css/my_orders.css">
+{% endblock %}
+<div class="container mt-5">
+    <h1 class="mb-4 text-center">Your Orders</h1>
+
+    {% if orders %}
+        <ul class="nav nav-tabs" id="orderTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="current-tab" data-bs-toggle="tab" data-bs-target="#current" type="button" role="tab">Current</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="delivered-tab" data-bs-toggle="tab" data-bs-target="#delivered" type="button" role="tab">Delivered</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="cancelled-tab" data-bs-toggle="tab" data-bs-target="#cancelled" type="button" role="tab">Cancelled</button>
+            </li>
+        </ul>
+
+        <div class="tab-content mt-3" id="orderTabsContent">
+            <div class="tab-pane fade show active" id="current" role="tabpanel">
+                {% for order in orders if order.status == "Pending" %}
+                <div class="container mb-3">
+                    <a href="{{ url_for('views.view_order_items', order_id=order.id) }}" class="card mb-3 text-decoration-none text-dark">
+                        <div class="card-body">
+                            <h5 class="card-title">Order #{{ order.id }}</h5>
+                            <p class="card-text"><strong>Items:</strong></p>
+                            <ul>
+                                {% for item in order.order_items %}
+                                    <li>{{ item.name }} (x{{ item.quantity }})</li>
+                                {% endfor %}
+                            </ul>
+                            <p class="card-text"><strong>Status:</strong> {{ order.status }}</p>
+                            <p class="card-text"><strong>Total Price:</strong> ₹{{ order.price }}</p>
+                        </div>
+                    </a>
+                    <form action="{{ url_for('views.cancel_order', order_id=order.id) }}" method="POST">
+                        <button type="submit" class="btn btn-danger">Cancel Order</button>
+                    </form>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="tab-pane fade" id="delivered" role="tabpanel">
+                {% for order in orders if order.status == "Delivered" %}
+                <div class="container mb-3">
+                    <a href="{{ url_for('views.view_order_items', order_id=order.id) }}" class="card mb-3 text-decoration-none text-dark">
+                        <div class="card-body">
+                            <h5 class="card-title">Order #{{ order.id }}</h5>
+                            <p class="card-text"><strong>Delivered On: </strong>{{ order.delivery_date }}</p>
+                            <p class="card-text"><strong>Items:</strong></p>
+                            <ul>
+                                {% for item in order.order_items %}
+                                    <li>{{ item.name }} (x{{ item.quantity }})</li>
+                                {% endfor %}
+                            </ul>
+                            <p class="card-text"><strong>Status:</strong> {{ order.status }}</p>
+                            <p class="card-text"><strong>Total Price:</strong> ₹{{ order.price }}</p>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="tab-pane fade" id="cancelled" role="tabpanel">
+                {% for order in orders if order.status == "Cancelled" %}
+                <div class="container mb-3">
+                    <a href="{{ url_for('views.view_order_items', order_id=order.id) }}" class="card mb-3 text-decoration-none text-dark">
+                        <div class="card-body">
+                            <h5 class="card-title">Order #{{ order.id }}</h5>
+                            <p class="card-text"><strong>Items:</strong></p>
+                            <ul>
+                                {% for item in order.order_items %}
+                                    <li>{{ item.name }} (x{{ item.quantity }})</li>
+                                {% endfor %}
+                            </ul>
+                            <p class="card-text"><strong>Status:</strong> {{ order.status }}</p>
+                            <p class="card-text"><strong>Total Price:</strong> ₹{{ order.price }}</p>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-info text-center">You have no orders yet.</div>
+    {% endif %}
+</div>
+{% endblock %}

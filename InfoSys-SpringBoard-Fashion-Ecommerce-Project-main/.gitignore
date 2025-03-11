@@ -1,0 +1,19 @@
+# Ignore virtual environment folder
+env/
+
+# Ignore Python bytecode files
+*.pyc
+__pycache__/
+*/__pycache__/
+
+# Ignore system files
+.DS_Store  # For macOS users
+Thumbs.db  # For Windows users
+
+#Ignore idea folders
+.idea
+.venv/
+venv/
+
+app/secret.txt
+instance/database.db
