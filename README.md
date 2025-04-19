@@ -1,6 +1,4 @@
-Here’s the updated `README.md` in your preferred style, now **including the chatbot integration (StyleVerseBot)** while keeping everything clean and without emojis:
 
----
 
 # InfoSys-SpringBoard Interns Fashion-Ecommerce-Project
 
